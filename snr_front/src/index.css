@@ -460,9 +460,9 @@ header {
     position:relative;
     top: -8px;
     right: 2px;
-    min-width: 15px;
+    width: 15px;
     height: 15px;
-    border-radius: 7px;
+    border-radius: 8px;
     background: #fcfcfc;
     color: var(--primary-brown);
     font-size: 11px;
@@ -501,6 +501,7 @@ header {
     padding: 0 0 0px 8px;
     margin: 0;
     font-size: 1.05rem;
+    color: var(--text-color);
 }
 
 .breadcrumbs li {
