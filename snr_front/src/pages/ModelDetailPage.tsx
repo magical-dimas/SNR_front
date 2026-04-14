@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { REACTORS_MOCK } from "../modules/mock";
 import type { ReactorRange } from "../modules/mock";
 import { BreadCrumbs } from "../components/BreadCrumbs";
-import defaultVid from '../assets/ritm.mp4';
+import defaultVid from '../assets/default.mp4';
 
 export const ModelDetailPage: FC = () => {
   const { id } = useParams();

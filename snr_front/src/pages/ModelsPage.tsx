@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import type { FC } from "react";
 import { REACTORS_MOCK } from "../modules/mock";
 import type { ReactorRange } from "../modules/mock";
@@ -10,12 +10,18 @@ export const ModelsPage: FC = () => {
   const [searchValue, setSearchValue] = useState("");
   const [reactors, setReactors] = useState<ReactorRange[]>(REACTORS_MOCK);
 
-  useEffect(() => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  const handleSearch = () => {
     const filtered = REACTORS_MOCK.filter(item => 
       item.name.toLowerCase().includes(searchValue.toLowerCase())
     );
     setReactors(filtered);
-  }, [searchValue]);
+  };
 
   return (
     <div>
@@ -28,8 +34,10 @@ export const ModelsPage: FC = () => {
               placeholder="Поиск моделей..." 
               value={searchValue} 
               onChange={(e) => setSearchValue(e.target.value)}
+              onKeyDown={handleKeyDown}
               className="search-input" 
             />
+            <button className="cart-btn" onClick={() => handleSearch()}>Найти</button>
         </div>
         <CartWidget/>
       </div>
