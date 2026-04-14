@@ -1,6 +1,3 @@
-import ritm_img from '../assets/ritm.jpg';
-import klt_img from '../assets/klt.jpg';
-
 export interface ReactorRange {
   id: number;
   name: string;
@@ -18,7 +15,7 @@ export const REACTORS_MOCK: ReactorRange[] = [
 	description: "РИТМ-200 - водо-водяной ядерный реактор, предназначенный для установки на ледоколах и перспективных плавучих атомных электростанциях, малых АЭС.",
 	power:       55,
 	fuel_usage:   45,
-	image_url:   ritm_img,
+	image_url:   "",
 	video:       "",
   },
   {
@@ -36,7 +33,7 @@ export const REACTORS_MOCK: ReactorRange[] = [
 	description: "КЛТ-40С - Российская плавучая атомная теплоэлектростанция (ПАТЭС) проекта 20870, находящаяся в порту города Певек (Чаунский район, Чукотского автономного округа), самая северная АЭС в мире.",
 	power:       70,
 	fuel_usage:   85,
-	image_url:   klt_img,
+	image_url:   "",
 	video:       "",
   }
 ];
