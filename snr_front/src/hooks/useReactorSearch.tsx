@@ -74,6 +74,10 @@ export function useReactorSearch(initialData: ReactorRange[]) {
       const scoredItems = [];
 
       for (const item of initialData) {
+        // if (item.description == ""){
+        if (item.photo_url == ""){
+          continue
+        }
         // const textInputs = tokenizer(item.description, { padding: true, truncation: true });
         // const textOut = await textModel(textInputs);
         // const textEmbedding = Array.from(textOut.text_embeds.data as Float32Array);
