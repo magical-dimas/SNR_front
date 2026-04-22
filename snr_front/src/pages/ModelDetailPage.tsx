@@ -8,13 +8,23 @@ import defaultVid from '../assets/default.mp4';
 
 export const ModelDetailPage: FC = () => {
   const { id } = useParams();
-  const [reactor, setReactor] = useState<ReactorRange>();
+  const [reactor, setReactor] = useState<ReactorRange | null>(null);
 
   useEffect(() => {
-    if (id) {
-      const item = REACTORS_MOCK.find(r => r.id === parseInt(id));
-      setReactor(item);
-    }
+    const fetchItem = async () => {
+      if (!id) return;
+      try {
+        const res = await fetch(`/api/models/${id}`);
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        setReactor(data);
+      } catch (err) {
+        console.warn("Бэкенд недоступен", err);
+        const item = REACTORS_MOCK.find(r => r.model_id === parseInt(id));
+        if (item) setReactor(item);
+      }
+    };
+    fetchItem();
   }, [id]);
 
   if (!reactor) return <div>Загрузка...</div>;
@@ -23,7 +33,7 @@ export const ModelDetailPage: FC = () => {
     <div>
       <BreadCrumbs
         crumbs={[
-          { label: reactor.name },
+          { label: reactor.title },
         ]}
       />
       <div className="detail-wrapper">
@@ -37,7 +47,7 @@ export const ModelDetailPage: FC = () => {
 
         <div className="detail-card__content">
             <div className="detail-card__body">
-                <h1 className="detail-card__title">{ reactor.name }</h1>
+                <h1 className="detail-card__title">{ reactor.title }</h1>
                 <div className="detail-card__params">
                     <span>Мощность: { reactor.power }</span>
                     <span>Расход топлива: { reactor.fuel_usage }</span>
