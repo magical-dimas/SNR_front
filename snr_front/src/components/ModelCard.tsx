@@ -4,11 +4,12 @@ import defaultImage from '../assets/DefaultImage.png';
 interface Props {
   id: number;
   name: string;
+  short_desc: string;
   power: number;
   image_url: string;
 }
 
-export const ModelCard: FC<Props> = ({ id, name, power, image_url }) => {
+export const ModelCard: FC<Props> = ({ id, name, short_desc, power, image_url }) => {
   return (
     <div className="product-card">
         <a href={`/${id}`} className="nav-item">
@@ -18,6 +19,7 @@ export const ModelCard: FC<Props> = ({ id, name, power, image_url }) => {
 
             <div className="product-info">
                 <div className="product-title">{name}</div>
+                <div className="product-specs">{short_desc}</div><div/>
                 <div className="product-specs">Мощность: {power} МВт</div>
             </div>
         </a>
