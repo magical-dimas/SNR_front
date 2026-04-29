@@ -74,45 +74,29 @@ export function useReactorSearch(initialData: ReactorRange[]) {
       const scoredItems = [];
 
       for (const item of initialData) {
-        // if (item.description == ""){
-        if (item.photo_url == ""){
+        if (item.short_desc == ""){
           continue
         }
-        // const textInputs = tokenizer(item.description, { padding: true, truncation: true });
-        // const textOut = await textModel(textInputs);
-        // const textEmbedding = Array.from(textOut.text_embeds.data as Float32Array);
-        const item_image = await RawImage.read(item.photo_url);
-        const item_imageInputs = await processor(item_image);
-        const item_imageOut = await visionModel(item_imageInputs);
-        const item_imageEmbedding = Array.from(item_imageOut.image_embeds.data as Float32Array);
+        const textInputs = tokenizer(item.short_desc, { padding: true, truncation: true });
+        const textOut = await textModel(textInputs);
+        const textEmbedding = Array.from(textOut.text_embeds.data as Float32Array);
 
         let dotProduct = 0, normA = 0, normB = 0;
         for (let i = 0; i < imageEmbedding.length; i++) {
-          dotProduct += imageEmbedding[i] * item_imageEmbedding[i];
+          dotProduct += imageEmbedding[i] * textEmbedding[i];
           normA += imageEmbedding[i] * imageEmbedding[i];
-          normB += item_imageEmbedding[i] * item_imageEmbedding[i];
+          normB += textEmbedding[i] * textEmbedding[i];
         }
         const score = dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
+        item.similarity_score = Math.round(10000*score)/100;
         scoredItems.push({ ...item, score });
       }
 
-      const THRESHOLD = 0.55;
-      const TOP_K = 2;
+      const THRESHOLD = 0.25;
 
       const filteredAndSorted = scoredItems
         .filter(item => item.score >= THRESHOLD)
-        .sort((a, b) => b.score - a.score)
-        .slice(0, TOP_K);
-
-      console.log("Результаты поиска CLIP по картинке:");
-      if (filteredAndSorted.length === 0) {
-        console.log("Ничего не найдено");
-      } else {
-        filteredAndSorted.forEach((item, index) => {
-          const percentage = (item.score * 100).toFixed(1);
-          console.log(`${index + 1}. ${item.name} | Совпадение: ${percentage}% | (Score: ${item.score.toFixed(4)})`);
-        });
-      }
+        .sort((a, b) => b.score - a.score);
 
       setItems(filteredAndSorted.map(({ score, ...item }) => item));
     } catch (error) {
@@ -121,6 +105,9 @@ export function useReactorSearch(initialData: ReactorRange[]) {
   }, [initialData]);
 
   const resetSearch = useCallback(() => {
+    for (const item of initialData) {
+        item.similarity_score = null;
+      }
     setItems(initialData);
   }, [initialData]);
 

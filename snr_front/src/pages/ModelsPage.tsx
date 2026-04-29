@@ -24,6 +24,7 @@ export const ModelsPage: FC = () => {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
+      handleClearImage();
       fetchReactors(searchValue);
     }
   };
@@ -78,7 +79,7 @@ export const ModelsPage: FC = () => {
               onKeyDown={handleKeyDown}
               className="search-input" 
             />
-            <button className="cart-btn" onClick={() => fetchReactors(searchValue)}>Найти</button>
+            <button className="cart-btn" onClick={() => {handleClearImage(); fetchReactors(searchValue);}}>Найти</button>
         </div>
         <CartWidget/>
       </div>

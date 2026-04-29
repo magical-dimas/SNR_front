@@ -156,10 +156,18 @@ header {
     margin-bottom: 10px;
 }
 
+.product-sim {
+    color: #8B0000; /* Темно-красный оттенок заголовков */
+    font-size: 17px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
 .product-specs {
     font-size: 17px;
     color: #4e4e4e;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     line-height: 1.5;
 }
 
