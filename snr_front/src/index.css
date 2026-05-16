@@ -172,7 +172,7 @@ header {
 }
 
 /* Кнопки */
-.btn {
+.butn {
     display: inline-block;
     background-color: var(--primary-brown);
     color: white;
@@ -180,21 +180,79 @@ header {
     text-decoration: none;
     border: none;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 16px;
     margin: 5px;
 }
 
-.btn:hover {
+.butn:hover {
     background-color: var(--light-brown);
 }
 
-.btn-small {
+.butn-small {
+    display: inline-block;
+    background-color: var(--primary-brown);
+    color: white;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    margin: 5px;
     padding: 5px 15px;
-    font-size: 12px;
+    font-size: 14px;
 }
 
-.btn-danger {
+.butn-small:hover {
+    background-color: var(--light-brown);
+}
+
+.butn-danger {
+    display: inline-block;
+    background-color: var(--primary-brown);
+    color: white;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    margin: 5px;
+    padding: 5px 15px;
+    font-size: 16px;
     background-color: #8B0000;
+}
+
+.butn-danger:hover {
+    background-color: #c74747;
+}
+
+.butn-danger-small {
+    display: inline-block;
+    background-color: var(--primary-brown);
+    color: white;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    margin: 5px;
+    padding: 5px 15px;
+    font-size: 14px;
+    background-color: #8B0000;
+}
+
+.butn-danger-small:hover {
+    background-color: #c74747;
+}
+
+.butn-green-small {
+    display: inline-block;
+    background-color: var(--primary-brown);
+    color: white;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    margin: 5px;
+    padding: 5px 15px;
+    font-size: 14px;
+    background-color: #035c00;
+}
+
+.butn-green-small:hover {
+    background-color: #0b8507;
 }
 
 /* Страница деталей (Details) */
@@ -230,6 +288,10 @@ header {
     line-height: 1.6;
 }
 
+.normal-text{
+    margin-bottom: 10px;
+}
+
 .input-group {
     margin-top: 20px;
     display: flex;
@@ -243,6 +305,53 @@ header {
     padding: 8px;
     width: 80px;
     border: 1px solid #ccc;
+}
+
+.input {
+    padding: 8px;
+    width: 80px;
+    text-align: center;
+    border: 1px solid #ccc;
+}
+
+.input:focus{
+    outline: none;
+}
+
+.auth-input{
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  background-color: #f8f9fa;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0;
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+  box-sizing: border-box;
+}
+
+.auth-input:focus{
+    outline:none;
+}
+
+.error-alert{
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--accent-red);
+  background-color: #ffe3e3;
+  border: 1px solid #ff6666;
+  box-sizing: border-box;
 }
 
 .input-group select {
@@ -285,7 +394,7 @@ header {
 }
 
 .request-table thead th {
-    text-align: left;
+    text-align: center;
     font-weight: 600;
     font-size: 16px;
     color: var(--accent-red);
@@ -303,6 +412,7 @@ header {
     font-size: 15px;
     color: var(--text-color);
     vertical-align: middle;
+    align-items: center;
 }
 
 .request-table__col-photo {
@@ -319,6 +429,12 @@ header {
 .request-table__col-result {
     color: var(--accent-red) !important;
     font-weight: 600;
+}
+
+.result {
+    color: var(--accent-red) !important;
+    font-weight: bold;
+    font-size: large;
 }
 
 .detail-wrapper {

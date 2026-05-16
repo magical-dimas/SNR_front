@@ -1,7 +1,10 @@
 import type { FC } from 'react';
 import defaultImage from '../assets/DefaultImage.png';
+import { useDispatch, useSelector } from "react-redux";
+import { addToDraft } from "../slices/applicationSlice";
+import type { RootState, AppDispatch } from "../store";
 
-interface Props {
+interface ModelCardProps {
   model_id: number;
   title: string;
   short_desc: string;
@@ -10,13 +13,22 @@ interface Props {
   similarity_score: number;
 }
 
-export const ModelCard: FC<Props> = ({ model_id, title, short_desc, power, photo_url, similarity_score }) => {
+export const ModelCard: FC<ModelCardProps> = ({ model_id, title, short_desc, power, photo_url, similarity_score }) => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { isAuth } = useSelector((state: RootState) => state.auth);
+  const { loading } = useSelector((state: RootState) => state.applications);
+
+  const handleAdd = () => {
+    dispatch(addToDraft({
+      model_id: model_id,
+      amount: 1
+    }));
+  };
   return (
     <div className="product-card">
-        <a href={`/${model_id}`} className="nav-item">
-            <div>
+            <a href={`/${model_id}`} className="nav-item">
                 <img src={photo_url || defaultImage} alt={title} className="product-img" />
-            </div>
 
             <div className="product-info">
                 <div className="product-title">{title}</div>
@@ -25,8 +37,17 @@ export const ModelCard: FC<Props> = ({ model_id, title, short_desc, power, photo
                 {similarity_score!=null && 
                   <div className="product-sim">Сходство: {similarity_score}%</div>
                 }
-            </div>
-        </a>
+              </div>
+            </a>
+                {isAuth  &&
+                <button onClick={handleAdd} className="butn" disabled={loading}>
+                {loading ? (
+                  <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                ) : (
+                  'Добавить'
+                )}
+                </button>
+                }
     </div>
   );
 };

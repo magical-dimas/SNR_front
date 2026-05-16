@@ -31,7 +31,7 @@ export function useReactorSearch(initialData: ReactorRange[]) {
 
       if (initPromise) {
         await initPromise;
-        setReady(true);
+        if (globalModels) setReady(true);
         return;
       }
 
@@ -48,11 +48,14 @@ export function useReactorSearch(initialData: ReactorRange[]) {
           console.log("Все модели успешно загружены в память!");
         } catch (error) {
           console.error("Ошибка инициализации CLIP:", error);
+          initPromise = null; 
         }
       })();
 
       await initPromise;
-      setReady(true);
+      if (globalModels) {
+        setReady(true);
+      }
     };
 
     initModels();
