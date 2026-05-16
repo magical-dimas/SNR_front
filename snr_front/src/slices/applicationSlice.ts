@@ -3,7 +3,7 @@ import { CalculationsApi, type M2MInput } from '../api/generated';
 
 export const fetchCalculations = createAsyncThunk(
   'calculations/fetchAll',
-  async (filters: { from_date?: string; to_date?: string }) => {
+  async (filters: { from_date?: string; to_date?: string; status?: string }) => {
     const response = await CalculationsApi.getCalculations(filters);
     return response.data;
   }
@@ -41,6 +41,11 @@ export const formDraft = createAsyncThunk('nuclear_calculations/form', async (id
   dispatch(fetchCalculationById(id) as any);
 });
 
+export const updateDraft = createAsyncThunk('nuclear_calculation/update', async (data: { id: number, desc: string }, { dispatch }) => {
+  await CalculationsApi.updateCalculation(data.id, data.desc);
+  dispatch(fetchCalculationById(data.id) as any);
+});
+
 export const clearDraft = createAsyncThunk('nuclear_calculations/clearDraft', async (id: number) => {
   const draft = await CalculationsApi.getCalculationById(id);
   for (const model of draft.data.models){
@@ -48,10 +53,20 @@ export const clearDraft = createAsyncThunk('nuclear_calculations/clearDraft', as
   }
 });
 
-export const resolveCalculation = createAsyncThunk('nuclear_calculations/resolve', async (data: { id: number, action: 'completed' | 'rejected' }, { dispatch }) => {
-  await CalculationsApi.finishCalculation(data.id, data.action);
-  dispatch(fetchCalculations({}) as any); 
-});
+export const resolveCalculation = createAsyncThunk(
+  'nuclear_calculations/resolve',
+  async (
+    data: { 
+      id: number; 
+      action: 'completed' | 'rejected'; 
+      filters?: { from_date?: string; to_date?: string; status?: string } 
+    }, 
+    { dispatch }
+  ) => {
+    await CalculationsApi.finishCalculation(data.id, data.action);
+    dispatch(fetchCalculations(data.filters || {}));
+  }
+);
 
 export const deleteCalculation = createAsyncThunk('nuclear_calculations/delete', async (id: number, { dispatch }) => {
   await CalculationsApi.removeCalculation(id);

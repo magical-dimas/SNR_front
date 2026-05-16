@@ -23,6 +23,9 @@ export const CalculationsApi = {
 
   finishCalculation: (id: number, action: 'completed' | 'rejected') => 
     apiClient.put(`/api/nuclear_calculations/${id}/finish`, { status: action }),
+
+  updateCalculation: (id: number, desc: string) => 
+    apiClient.put(`/api/nuclear_calculations/${id}`, { description: desc }),
 };
 
 export const AuthApi = {

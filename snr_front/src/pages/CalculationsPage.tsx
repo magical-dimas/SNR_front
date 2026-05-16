@@ -6,6 +6,14 @@ import { Link } from 'react-router-dom';
 import { ROUTES } from '../Routes';
 import { BreadCrumbs } from '../components/BreadCrumbs';
 
+const getTodayStr = () => {
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 export const CalculationsPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { list, loading } = useSelector((state: RootState) => state.applications);
@@ -16,28 +24,34 @@ export const CalculationsPage: React.FC = () => {
   const [dateFrom, setDateFrom] = useState(''); 
   const [dateTo, setDateTo] = useState(''); 
   const [creatorFilter, setCreatorFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
 
-  const [appliedDateFrom, setAppliedDateFrom] = useState('');
-  const [appliedDateTo, setAppliedDateTo] = useState('');
+  const [appliedDateFrom, setAppliedDateFrom] = useState(getTodayStr());
+  const [appliedDateTo, setAppliedDateTo] = useState(getTodayStr());
   const [appliedCreator, setAppliedCreator] = useState('');
+  const [appliedStatus, setAppliedStatus] = useState('');
 
   useEffect(() => {
     const loadData = () => {
-      let finalDateTo = appliedDateTo;
-
       dispatch(fetchCalculations({
-        from_date: appliedDateFrom, 
-        to_date: finalDateTo 
+        from_date: appliedDateFrom || getTodayStr(), 
+        to_date: appliedDateTo || getTodayStr(),
+        ...(appliedStatus && { status: appliedStatus })
       }));
     };
 
     loadData();
     const intervalId = setInterval(loadData, 5000);
     return () => clearInterval(intervalId);
-  }, [dispatch, appliedDateFrom, appliedDateTo]);
+  }, [dispatch, appliedDateFrom, appliedDateTo, appliedStatus]);
 
   const handleResolve = (id: number, action: 'completed' | 'rejected') => {
-    dispatch(resolveCalculation({ id, action }));
+    const currentFilters = {
+    from_date: appliedDateFrom || getTodayStr(),
+    to_date: appliedDateTo || getTodayStr(),
+    ...(appliedStatus && { status: appliedStatus })
+    };
+    dispatch(resolveCalculation({ id, action, filters: currentFilters }));
   };
 
   const getBadgeClass = (status: string) => {
@@ -50,14 +64,16 @@ export const CalculationsPage: React.FC = () => {
   };
 
   const handleSearchClick = () => {
-    setAppliedDateFrom(dateFrom);
-    setAppliedDateTo(dateTo);
+    setAppliedDateFrom(dateFrom || getTodayStr());
+    setAppliedDateTo(dateTo || getTodayStr());
     if (isModerator) setAppliedCreator(creatorFilter);
+    setAppliedStatus(statusFilter);
   };
 
   const handleResetFilters = () => {
-    setDateFrom(''); setDateTo(''); setCreatorFilter('');
-    setAppliedDateFrom(''); setAppliedDateTo(''); setAppliedCreator('');
+    setDateFrom(''); setDateTo(''); setCreatorFilter(''); setStatusFilter('');
+    setAppliedDateFrom(getTodayStr()); setAppliedDateTo(getTodayStr());
+    setAppliedCreator(''); setAppliedStatus('');
   };
 
   const displayedList = list.filter((calc: any) => {
@@ -66,7 +82,7 @@ export const CalculationsPage: React.FC = () => {
     return login.includes(appliedCreator.toLowerCase());
   });
 
-  const colClass = isModerator ? "col-md-3" : "col-md-4";
+  const colClass = isModerator ? "col-md-2" : "col-md-3";
 
   return (
     <div className="app-container">
@@ -76,30 +92,30 @@ export const CalculationsPage: React.FC = () => {
           {isModerator ? 'Журнал заявок' : 'Мои заявки'}
         </h3>
 
-        <div className="row g-3 mb-4 mt-2 bg-light p-3">
-          <div className={colClass}>
+        <div className="row g-3 mb-4 mt-2 bg-light p-3 align-items-end">
+          <div className={`${colClass} d-flex flex-column justify-content-end`}>
             <label className="normal-text fw-bold">Дата от:</label>
             <input 
               type="date" 
-              className="auth-input" 
+              className="auth-input text-muted" 
               value={dateFrom} 
               onChange={(e) => setDateFrom(e.target.value)} 
-              style={{backgroundColor: '#ffffff'}}
+              style={{backgroundColor: '#ffffff', fontSize: '16px'}}
             />
           </div>
-          <div className={colClass}>
+          <div className={`${colClass} d-flex flex-column justify-content-end`}>
             <label className="normal-text fw-bold">Дата до:</label>
             <input 
               type="date" 
-              className="auth-input" 
+              className="auth-input text-muted" 
               value={dateTo} 
               onChange={(e) => setDateTo(e.target.value)}
-              style={{backgroundColor: '#ffffff'}}
+              style={{backgroundColor: '#ffffff', fontSize: '16px'}}
             />
           </div>
 
           {isModerator && (
-            <div className={colClass}>
+            <div className={`${colClass} d-flex flex-column justify-content-end`}>
               <label className="normal-text fw-bold">Создатель:</label>
               <input 
                 type="text" 
@@ -108,12 +124,27 @@ export const CalculationsPage: React.FC = () => {
                 value={creatorFilter} 
                 onChange={(e) => setCreatorFilter(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSearchClick()}
-                style={{backgroundColor: '#ffffff'}} 
+                style={{backgroundColor: '#ffffff', fontSize: '16px'}} 
               />
             </div>
           )}
 
           <div className={`${colClass} d-flex flex-column justify-content-end`}>
+            <label className="normal-text fw-bold">Статус:</label>
+            <select 
+              className="auth-input" 
+              value={statusFilter} 
+              onChange={(e) => setStatusFilter(e.target.value)}
+              style={{backgroundColor: '#ffffff', fontSize: '16px'}}
+            >
+              <option value="">Все статусы</option>
+              <option value="formed">Сформирована</option>
+              <option value="completed">Завершена</option>
+              <option value="rejected">Отклонена</option>
+            </select>
+          </div>
+
+          <div className="col-12 col-md-auto d-flex flex-column justify-content-end">
             <div className="d-flex gap-2">
               <button className="butn" onClick={handleResetFilters}>
                 Сбросить
@@ -135,6 +166,7 @@ export const CalculationsPage: React.FC = () => {
                 {isModerator && <th>Создатель</th>}
                 <th>Дата формирования</th>
                 <th>Статус</th>
+                <th>Количество расчётов</th>
                 <th>Действия</th>
               </tr>
             </thead>
@@ -163,6 +195,7 @@ export const CalculationsPage: React.FC = () => {
                         {calc.status}
                       </span>
                     </td>
+                    <td>{calc.completed_item_count}</td>
                     <td>
                       <Link to={`${ROUTES.CALCULATIONS}/${calc.calc_id}`} className="butn-small">Просмотр</Link>
 
@@ -178,7 +211,7 @@ export const CalculationsPage: React.FC = () => {
               })}
               {displayedList.length === 0 && !loading && (
                 <tr>
-                  <td colSpan={isModerator ? 5 : 4} className="text-center py-5 text-muted">Заявки не найдены</td>
+                  <td colSpan={isModerator ? 6 : 5} className="text-center py-5 text-muted">Заявки не найдены</td>
                 </tr>
               )}
             </tbody>

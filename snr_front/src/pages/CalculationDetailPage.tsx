@@ -2,14 +2,14 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { BreadCrumbs } from '../components/BreadCrumbs';
-import { fetchDraftSummary } from '../slices/applicationSlice';
+import { fetchDraftSummary, updateDraft } from '../slices/applicationSlice';
 import { apiClient } from '../api/axios';
 import type { AppDispatch } from '../store';
 import { ROUTES } from '../Routes';
 import defaultImage from '../assets/DefaultImage.png';
 
 const calculateModel = (power: number, fuel_usage: number, amount: number) => {
-  return { res_power: power*amount*30, res_fuel: fuel_usage*amount*30 };
+  return { res_power: power * amount * 30, res_fuel: fuel_usage * amount * 30 };
 }
 
 export const CalculationDetailPage: React.FC = () => {
@@ -20,16 +20,18 @@ export const CalculationDetailPage: React.FC = () => {
   const [calcData, setCalcData] = useState<any>(null);
   const [localItems, setLocalItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  
+  const [localDesc, setLocalDesc] = useState('');
+  const [descLoading, setDescLoading] = useState(false);
 
   const loadCalculation = async () => {
     try {
       const res = await apiClient.get(`/api/nuclear_calculations/${id}`);
       setCalcData(res.data);
-
+      setLocalDesc(res.data.calc?.description ?? res.data.description ?? '');
+      
       const items = res.data.models || [];
-      setLocalItems(items.map((item: any) => ({
-        ...item,
-      })));
+      setLocalItems(items.map((item: any) => ({ ...item })));
     } catch (e) {
       console.error(e);
       navigate(ROUTES.CALCULATIONS); 
@@ -99,9 +101,22 @@ export const CalculationDetailPage: React.FC = () => {
     navigate(ROUTES.CALCULATIONS);
   };
 
-const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-  e.preventDefault();
-};
+  const handleUpdateDescription = async () => {
+    if (!id) return;
+    setDescLoading(true);
+    try {
+      await dispatch(updateDraft({ id: Number(id), desc: localDesc })).unwrap();
+    } catch (err) {
+      console.error(err);
+      alert("Ошибка обновления описания");
+    } finally {
+      setDescLoading(false);
+    }
+  };
+
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+  };
 
   const totalNumbersDisplay = useMemo(() => {
     let sum_p = 0, sum_f = 0;
@@ -110,7 +125,7 @@ const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (res_power > 0) sum_p += res_power;
       if (res_fuel > 0) sum_f += res_fuel;
     });
-    return {sum_p, sum_f};
+    return { sum_p, sum_f };
   }, [localItems]);
 
   if (!calcData) return <div className="app-container py-5 text-center">Загрузка заявки...</div>;
@@ -121,14 +136,39 @@ const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
   return (
     <div className="app-container">
       <BreadCrumbs crumbs={[
-        { label: 'Все расчеты', path: ROUTES.CALCULATIONS }, 
+        { label: 'Все расчеты', path: ROUTES.CALCULATIONS },
         { label: `Заявка #${id}` }
       ]} />
       
       <div className="bg-white p-4 shadow-sm mt-3">
         <h3 className="request-detail__title">
-          Звявка #{id} <span className="fs-5" style={{color: '#333333'}}>(Статус: {status})</span>
+          Заявка #{id} <span className="fs-5" style={{color: '#333333'}}>(Статус: {status})</span>
         </h3>
+
+        <div className="mb-4">
+          <label className="normal-text fw-bold">Описание заявки:</label>
+          <div className="d-flex gap-2 align-items-start">
+            <textarea
+              className="auth-input flex-grow-1"
+              rows={2}
+              value={localDesc}
+              onChange={(e) => setLocalDesc(e.target.value)}
+              readOnly={!isDraft || descLoading}
+              placeholder={isDraft ? "Введите описание заявки..." : "Описание отсутствует"}
+              style={{ backgroundColor: '#ffffff', fontSize: '14px', resize: 'vertical' }}
+            />
+            {isDraft && (
+              <button
+                className="butn"
+                onClick={handleUpdateDescription}
+                disabled={descLoading}
+                style={{ whiteSpace: 'nowrap' }}
+              >
+                {descLoading ? 'Сохранение...' : 'Сохранить'}
+              </button>
+            )}
+          </div>
+        </div>
         
         {localItems.length > 0 ? (
           <>
@@ -199,12 +239,16 @@ const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
             </div>
 
             <div className="result mt-4 d-flex justify-content-between align-items-center">
-              <h4 style={{color: '#333333'}}>Общая мощность:</h4>
-              <h4 className="fw-bold">{(totalNumbersDisplay.sum_p/1000).toFixed(2)} ГВт</h4>
+              <div style={{color: '#333333'}}>Количество учтённых в расчёте моделей: </div>
+              <div className="fw-bold">{calcData.calc.completed_item_count}</div>
             </div>
             <div className="result mt-4 d-flex justify-content-between align-items-center">
-              <h4 style={{color: '#333333'}}>Общий расход топлива:</h4>
-              <h4 className="fw-bold">{(totalNumbersDisplay.sum_f/1000).toFixed(2)} кг</h4>
+              <div style={{color: '#333333'}}>Общая мощность: </div>
+              <div className="fw-bold">{calcData.calc.completed_item_count != 0 ? ((totalNumbersDisplay.sum_p/1000).toFixed(2)) : 0} ГВт</div>
+            </div>
+            <div className="result mt-4 d-flex justify-content-between align-items-center">
+              <div style={{color: '#333333'}}>Общий расход топлива: </div>
+              <div className="fw-bold">{calcData.calc.completed_item_count != 0 ? ((totalNumbersDisplay.sum_f/1000).toFixed(2)) : 0} кг</div>
             </div>
 
             {isDraft && (
