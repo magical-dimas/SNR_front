@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import { ROUTES } from '../Routes';
 import { BreadCrumbs } from '../components/BreadCrumbs';
 
+type CalcStatus = 'draft' | 'formed' | 'completed' | 'rejected'
+
 const getTodayStr = () => {
   const d = new Date();
   const year = d.getFullYear();
@@ -33,11 +35,12 @@ export const CalculationsPage: React.FC = () => {
 
   useEffect(() => {
     const loadData = () => {
-      dispatch(fetchCalculations({
-        from_date: appliedDateFrom || getTodayStr(), 
-        to_date: appliedDateTo || getTodayStr(),
-        ...(appliedStatus && { status: appliedStatus })
-      }));
+      const currentFilters = {
+      "from_date": appliedDateFrom || getTodayStr(),
+      "to_date": appliedDateTo || getTodayStr(),
+      ...(appliedStatus && { status: appliedStatus as CalcStatus })
+      };
+      dispatch(fetchCalculations(currentFilters));
     };
 
     loadData();
@@ -47,9 +50,9 @@ export const CalculationsPage: React.FC = () => {
 
   const handleResolve = (id: number, action: 'completed' | 'rejected') => {
     const currentFilters = {
-    from_date: appliedDateFrom || getTodayStr(),
-    to_date: appliedDateTo || getTodayStr(),
-    ...(appliedStatus && { status: appliedStatus })
+    "from_date": appliedDateFrom || getTodayStr(),
+    "to_date": appliedDateTo || getTodayStr(),
+    ...(appliedStatus && { status: appliedStatus as CalcStatus })
     };
     dispatch(resolveCalculation({ id, action, filters: currentFilters }));
   };

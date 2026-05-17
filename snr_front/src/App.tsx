@@ -42,7 +42,7 @@ function App() {
         
         <Routes>
           <Route path={ROUTES.MODELS} element={<ModelsPage />} />
-          <Route path={ROUTES.LOGIN} element={<AuthPage type="login" />} />
+          <Route path={ROUTES.LOGIN} element={<AuthPage/>} />
           <Route path={ROUTES.REGISTER} element={<RegisterPage/>} />
 
           <Route path={ROUTES.CALCULATIONS} element={<CalculationsPage />} />

@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import { useSelector } from "react-redux";
 import type { RootState } from "../store";
+import { Link } from 'react-router-dom';
 import { ROUTES } from "../Routes";
 
 export const CartWidget: FC = () => {
@@ -9,10 +10,10 @@ export const CartWidget: FC = () => {
   return (
     <div>
       {count!=0 && 
-        <a href={`${ROUTES.CALCULATIONS}/${draftId}`} className="cart-btn" title="Текущая заявка">
+        <Link to={`${ROUTES.CALCULATIONS}/${draftId}`} className="cart-btn" title="Текущая заявка">
           <span className="cart_btn_img">&#x2622;</span>
           <span className="request-icon__badge">{count}</span>
-        </a>
+        </Link>
       }
       {count==0 && 
         <div className="cart-btn-inactive" title="Текущая заявка">

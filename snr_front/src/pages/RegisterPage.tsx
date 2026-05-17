@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthApi } from '../api/generated';
+import { apiClient } from '../api/axios';
 import { ROUTES } from '../Routes';
 
 export const RegisterPage: React.FC = () => {
@@ -12,7 +12,9 @@ export const RegisterPage: React.FC = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await AuthApi.register({ login, password });
+      const payload = { login, password };
+      const endpoint = '/api/engineers/register';
+      await apiClient.post(endpoint, payload);
       alert('Регистрация прошла успешно! Используйте эти данные для входа');
       navigate('/login');
     } catch (err) {
