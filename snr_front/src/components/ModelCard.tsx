@@ -3,6 +3,7 @@ import defaultImage from '../assets/DefaultImage.png';
 import { useDispatch, useSelector } from "react-redux";
 import { addToDraft } from "../slices/applicationSlice";
 import type { RootState, AppDispatch } from "../store";
+import { Link } from 'react-router-dom';
 
 interface ModelCardProps {
   model_id: number;
@@ -27,7 +28,7 @@ export const ModelCard: FC<ModelCardProps> = ({ model_id, title, short_desc, pow
   };
   return (
     <div className="product-card">
-            <a href={`/${model_id}`} className="nav-item">
+            <Link to={`/${model_id}`} className="nav-item">
                 <img src={photo_url || defaultImage} alt={title} className="product-img" />
 
             <div className="product-info">
@@ -38,7 +39,7 @@ export const ModelCard: FC<ModelCardProps> = ({ model_id, title, short_desc, pow
                   <div className="product-sim">Сходство: {similarity_score}%</div>
                 }
               </div>
-            </a>
+            </Link>
                 {isAuth  &&
                 <button onClick={handleAdd} className="butn" disabled={loading}>
                 {loading ? (
