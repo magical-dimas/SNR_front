@@ -6,9 +6,13 @@ import { BreadCrumbs } from "../components/BreadCrumbs";
 import { ModelCard } from "../components/ModelCard";
 import { CartWidget } from "../components/CartWidget";
 import { useReactorSearch } from "../hooks/useReactorSearch";
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState, AppDispatch } from '../store';
+import { setSearchValue } from '../slices/filterSlice';
 
 export const ModelsPage: FC = () => {
-  const [searchValue, setSearchValue] = useState("");
+  const searchValue = useSelector((state: RootState) => state.filter.searchValue);
+    const dispatch = useDispatch<AppDispatch>();
   const [fetchedReactors, setFetchedReactors] = useState<ReactorRange[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -48,7 +52,7 @@ export const ModelsPage: FC = () => {
     }
   };
 
-  useEffect(() => { fetchReactors(); }, []);
+  useEffect(() => { fetchReactors(searchValue); }, []);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -75,7 +79,7 @@ export const ModelsPage: FC = () => {
               type="text" 
               placeholder="Поиск моделей..." 
               value={searchValue} 
-              onChange={(e) => setSearchValue(e.target.value)}
+              onChange={(e) => dispatch(setSearchValue(e.target.value))}
               onKeyDown={handleKeyDown}
               className="search-input" 
             />

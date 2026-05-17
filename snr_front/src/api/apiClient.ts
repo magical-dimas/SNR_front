@@ -1,7 +1,7 @@
 import { Api } from './api';
 
 export const apiClient = new Api({
-  baseURL: '/',
+  baseURL: import.meta.env.VITE_API_BASE_URL || '/',
 });
 
 apiClient.instance.interceptors.request.use((config) => {
