@@ -7,7 +7,7 @@ export interface ReactorRange {
   fuel_usage: number;
   photo_url: string;
   video: string;
-  similarity_score: number;
+  similarity_score: number | null;
 }
 
 export const REACTORS_MOCK: ReactorRange[] = [

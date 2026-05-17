@@ -10,7 +10,7 @@ interface ModelCardProps {
   short_desc: string;
   power: number;
   photo_url: string;
-  similarity_score: number;
+  similarity_score: number | null;
 }
 
 export const ModelCard: FC<ModelCardProps> = ({ model_id, title, short_desc, power, photo_url, similarity_score }) => {

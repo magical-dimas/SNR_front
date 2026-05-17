@@ -16,7 +16,9 @@ export const NavBar: FC = () => {
   const draftId = useSelector((state: RootState) => state.applications.draftId);
 
   const handleLogout = async () => {
-    await dispatch(clearDraft(draftId));
+    if (draftId != null) {
+      await dispatch(clearDraft(draftId));
+    }
     dispatch(logout());
     dispatch(clearDraftAndFilters());
     navigate(ROUTES.MODELS);

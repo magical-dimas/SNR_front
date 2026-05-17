@@ -17,7 +17,7 @@ export const RegisterPage: React.FC = () => {
       await apiClient.post(endpoint, payload);
       alert('Регистрация прошла успешно! Используйте эти данные для входа');
       navigate('/login');
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
       if (err.response && err.response.status === 500) {
         setError('Пользователь с таким логином уже существует.');
