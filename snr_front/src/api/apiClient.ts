@@ -1,7 +1,7 @@
 import { Api } from './api';
 
 export const apiClient = new Api({
-  baseURL: import.meta.env.VITE_API_BASE_URL || '/',
+  baseURL: 'http://localhost:8080',
 });
 
 apiClient.instance.interceptors.request.use((config) => {

@@ -135,7 +135,11 @@ export default defineConfig({
     host: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        target: 'http://10.46.79.236:8080',
+        changeOrigin: true,
+      },
+      '/reactorservice': {
+        target: 'http://10.46.79.236:9000',
         changeOrigin: true,
       }
     }

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToDraft } from "../slices/applicationSlice";
 import type { RootState, AppDispatch } from "../store";
 import { Link } from 'react-router-dom';
+import { resolveMediaUrl } from '../utils/media';
 
 interface ModelCardProps {
   model_id: number;
@@ -29,7 +30,7 @@ export const ModelCard: FC<ModelCardProps> = ({ model_id, title, short_desc, pow
   return (
     <div className="product-card">
             <Link to={`/${model_id}`} className="nav-item">
-                <img src={photo_url || defaultImage} alt={title} className="product-img" />
+                <img src={resolveMediaUrl(photo_url) || defaultImage} alt={title} className="product-img" />
 
             <div className="product-info">
                 <div className="product-title">{title}</div>

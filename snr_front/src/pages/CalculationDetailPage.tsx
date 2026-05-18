@@ -7,6 +7,7 @@ import { apiClient } from '../api/axios';
 import type { AppDispatch } from '../store';
 import { ROUTES } from '../Routes';
 import defaultImage from '../assets/DefaultImage.png';
+import { resolveMediaUrl } from '../utils/media';
 
 const calculateModel = (power: number, fuel_usage: number, amount: number) => {
   return { res_power: power * amount * 30, res_fuel: fuel_usage * amount * 30 };
@@ -199,7 +200,7 @@ export const CalculationDetailPage: React.FC = () => {
                     return (
                       <tr key={idx} className="align-middle text-center">
                         <td className="request-table__col-photo">
-                          <img src={`${item.photo}` || defaultImage} alt={`${item.title}`}/>
+                          <img src={`${resolveMediaUrl(item.photo)}` || defaultImage} alt={`${item.title}`}/>
                         </td>
                         <td>{ item.title }</td>
                         <td>{ item.power }</td>
