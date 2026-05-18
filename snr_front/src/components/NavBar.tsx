@@ -42,7 +42,7 @@ export const NavBar: FC = () => {
         </div>
       </div>
     <div className="action-bar">
-    <Navbar expand="lg">
+    <Navbar>
       <Container>
         <Navbar.Brand as={Link} to={ROUTES.MODELS} style={{ color: '#ffffff' }}>Моделирование ММР</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />

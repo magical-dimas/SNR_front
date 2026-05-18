@@ -9,6 +9,7 @@ import { useReactorSearch } from "../hooks/useReactorSearch";
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState, AppDispatch } from '../store';
 import { setSearchValue } from '../slices/filterSlice';
+import { fetch } from '@tauri-apps/api/http';
 
 export const ModelsPage: FC = () => {
   const searchValue = useSelector((state: RootState) => state.filter.searchValue);
@@ -34,23 +35,31 @@ export const ModelsPage: FC = () => {
   };
 
   const fetchReactors = async (search: string = "") => {
-    setIsLoading(true);
-    try {
-      const query = search ? `?Title=${encodeURIComponent(search)}` : "";
-      const res = await fetch(`/api/models${query}`);
-      if (!res.ok) throw new Error();
-      const data = await res.json();
-      setFetchedReactors(data);
-    } catch (error) {
-      console.warn("Fallback на mock-данные", error);
-      const filtered = REACTORS_MOCK.filter((item) =>
-        item.title.toLowerCase().includes(search.toLowerCase())
-      );
-      setFetchedReactors(filtered);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  setIsLoading(true);
+  try {
+    const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://10.46.79.236:8080';
+    const query = search ? `?Title=${encodeURIComponent(search)}` : "";
+    
+    const res = await fetch(`${baseUrl}/api/models${query}`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    
+    const data = res.data as ReactorRange[];
+    setFetchedReactors(data);
+    
+  } catch (error) {
+    console.warn("Fallback на mock-данные", error);
+    const filtered = REACTORS_MOCK.filter((item) =>
+      item.title.toLowerCase().includes(search.toLowerCase())
+    );
+    setFetchedReactors(filtered);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   useEffect(() => { fetchReactors(searchValue); }, []);
 

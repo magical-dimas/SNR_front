@@ -2,8 +2,8 @@ import React, { useState, type FC } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setAuth } from '../slices/authSlice';
-import { apiClient } from '../api/axios';
 import { ROUTES } from '../Routes';
+import { fetch, Body } from '@tauri-apps/api/http';
 
 export const AuthPage: FC = () => {
   const navigate = useNavigate();
@@ -18,18 +18,22 @@ export const AuthPage: FC = () => {
     try {
       const payload = { login, password };
 
-      const endpoint = '/api/engineers/login';
+      let result = await fetch('http://10.46.79.236:8080/api/engineers/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: Body.json(payload)
+      });
 
-      let res = await apiClient.post(endpoint, payload);
+      const data = result.data as any;
 
-      const token = res.data.access_token || res.data.token;
+      const token = data.access_token || data.token;
 
       if (!token) {
         setError('Не удалось получить токен доступа от сервера.');
         return;
       }
 
-      let actualRole = (res.data.role || 1);
+      let actualRole = (data.role || 1);
       try {
         const base64Url = token.split('.')[1];
         if (base64Url) {
@@ -46,8 +50,8 @@ export const AuthPage: FC = () => {
         console.error("Ошибка при чтении роли из токена:", e);
       }
 
-      const user = res.data.user || { 
-        id: res.data.id || Date.now(), 
+      const user = data.user || { 
+        id: data.id || Date.now(), 
         login: login, 
         role: actualRole 
       };

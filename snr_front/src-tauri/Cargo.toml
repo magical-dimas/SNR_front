@@ -1,0 +1,29 @@
+[package]
+name = "app"
+version = "0.1.0"
+description = "A Tauri App"
+authors = ["you"]
+license = ""
+repository = ""
+edition = "2021"
+rust-version = "1.70.0"
+
+[lib]
+name = "app_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "1.5", features = [] }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+log = "0.4"
+tauri = { version = "1.8", features = [ "http-all", "shell-open"] }
+
+objc2 = "=0.5.2"
+
+env_logger = "0.10"
+
+[features]
+custom-protocol = ["tauri/custom-protocol"]

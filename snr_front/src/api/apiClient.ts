@@ -1,7 +1,8 @@
 import { Api } from './api';
 
 export const apiClient = new Api({
-  baseURL: import.meta.env.VITE_API_BASE_URL || '/',
+  baseURL: 'http://10.8.5.188:8080',
+  timeout: 5000,
 });
 
 apiClient.instance.interceptors.request.use((config) => {

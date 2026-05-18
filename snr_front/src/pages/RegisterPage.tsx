@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { apiClient } from '../api/axios';
 import { ROUTES } from '../Routes';
+import { fetch, Body } from '@tauri-apps/api/http';
 
 export const RegisterPage: React.FC = () => {
   const [login, setLoginStr] = useState('');
@@ -13,8 +13,11 @@ export const RegisterPage: React.FC = () => {
     e.preventDefault();
     try {
       const payload = { login, password };
-      const endpoint = '/api/engineers/register';
-      await apiClient.post(endpoint, payload);
+      await fetch('http://10.46.79.236:8080/api/engineers/register', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: Body.json(payload)
+            });
       alert('Регистрация прошла успешно! Используйте эти данные для входа');
       navigate('/login');
     } catch (err: any) {

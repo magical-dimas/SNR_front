@@ -1,11 +1,11 @@
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa';
 import react from '@vitejs/plugin-react'
-import mkcert from 'vite-plugin-mkcert';
+// import mkcert from 'vite-plugin-mkcert';
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), mkcert(), VitePWA({
+  plugins: [react(), VitePWA({
       registerType: 'autoUpdate',
       injectRegister: 'auto',
       includeAssets: ['logo1.png'],
@@ -128,14 +128,13 @@ export default defineConfig({
         ]
       }
     })],
-  base: "/SNR_front/",
   server: {
     port: 52840,
     strictPort: true,
     host: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        target: 'http://10.46.79.236:8080',
         changeOrigin: true,
       }
     }

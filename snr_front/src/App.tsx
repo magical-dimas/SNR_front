@@ -12,8 +12,6 @@ import { fetchDraftSummary } from "./slices/applicationSlice";
 import type { RootState, AppDispatch } from "./store";
 import { RegisterPage } from "./pages/RegisterPage";
 
-const routerBaseName = "/SNR_front/";
-
 function App() {
   const dispatch = useDispatch<AppDispatch>();
   const isLoading = useSelector((state: RootState) => state.applications.loading);
@@ -26,7 +24,7 @@ function App() {
   }, [isAuth, dispatch]);
 
   return (
-    <BrowserRouter basename={routerBaseName}>
+    <BrowserRouter>
       {isLoading && (
         <div 
             className="global-loader position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" 

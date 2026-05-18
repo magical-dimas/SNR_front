@@ -5,6 +5,8 @@ import { REACTORS_MOCK } from "../modules/mock";
 import type { ReactorRange } from "../modules/mock";
 import { BreadCrumbs } from "../components/BreadCrumbs";
 import defaultVid from '../assets/default.mp4';
+import { resolveMediaUrl } from "../utils/media";
+import { fetch } from '@tauri-apps/api/http';
 
 export const ModelDetailPage: FC = () => {
   const { id } = useParams();
@@ -14,9 +16,10 @@ export const ModelDetailPage: FC = () => {
     const fetchItem = async () => {
       if (!id) return;
       try {
-        const res = await fetch(`/api/models/${id}`);
+        const baseUrl = import.meta.env.VITE_API_BASE_URL || 'http://10.46.79.236:8080';
+        const res = await fetch(`${baseUrl}/api/models/${id}`);
         if (!res.ok) throw new Error();
-        const data = await res.json();
+        const data = await res.data as ReactorRange;
         setReactor(data);
       } catch (err) {
         console.warn("Бэкенд недоступен", err);
@@ -40,7 +43,7 @@ export const ModelDetailPage: FC = () => {
       <div className="detail-card">
         <div className="detail-card__video-wrap">
             <video className="detail-card__video" controls autoPlay muted loop playsInline>
-              <source src={`${reactor.video}` || defaultVid} type="video/mp4" />
+              <source src={resolveMediaUrl(reactor.video) || defaultVid || defaultVid} type="video/mp4" />
             </video>
             <div className="detail-card__overlay"></div>
         </div>

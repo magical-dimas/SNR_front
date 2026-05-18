@@ -464,7 +464,10 @@ select.auth-input {
     background-color: var(--card-bg);
     overflow: hidden;
     position: relative;
-    aspect-ratio: 9 / 15;
+    box-sizing: border-box;
+    padding-top: 110%;
+    width: 100%;
+    margin: 0 auto;
 }
 
 .detail-card__video-wrap {
