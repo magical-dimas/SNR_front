@@ -1,4 +1,4 @@
-const IMG_BASE_URL = 'http://10.46.79.236:9000';
+const IMG_BASE_URL = 'https://10.46.79.236:52840';
 
 export function resolveMediaUrl(rawUrl: string | null | undefined): string {
   if (!rawUrl) return '';
