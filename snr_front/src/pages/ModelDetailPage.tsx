@@ -15,7 +15,7 @@ export const ModelDetailPage: FC = () => {
     const fetchItem = async () => {
       if (!id) return;
       try {
-        const res = await fetch(`http://localhost:8080/api/models/${id}`);
+        const res = await fetch(`https://10.46.79.236:52840/api/models/${id}`);
         if (!res.ok) throw new Error();
         const data = await res.json();
         setReactor(data);

@@ -37,7 +37,7 @@ export const ModelsPage: FC = () => {
     setIsLoading(true);
     try {
       const query = search ? `?Title=${encodeURIComponent(search)}` : "";
-      const res = await fetch(`http://localhost:8080/api/models${query}`);
+      const res = await fetch(`https://10.46.79.236:52840/api/models${query}`);
       if (!res.ok) throw new Error();
       const data = await res.json();
       setFetchedReactors(data);

@@ -1,7 +1,7 @@
 import { Api } from './api';
 
 export const apiClient = new Api({
-  baseURL: 'http://localhost:8080',
+  baseURL: 'https://10.46.79.236:52840',
 });
 
 apiClient.instance.interceptors.request.use((config) => {
