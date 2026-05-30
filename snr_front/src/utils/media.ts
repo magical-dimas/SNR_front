@@ -3,6 +3,10 @@ const IMG_BASE_URL = 'https://10.46.79.236:52840';
 export function resolveMediaUrl(rawUrl: string | null | undefined): string {
   if (!rawUrl) return '';
   
+  if (rawUrl.startsWith('http://localhost:9000')){
+    return rawUrl.replace("http://localhost:9000", IMG_BASE_URL);
+  }
+
   // Если URL уже полный (http/https), проверяем протокол
   if (rawUrl.startsWith('http://') || rawUrl.startsWith('https://')) {
     // В dev-режиме с mkcert заменяем http на относительный путь
